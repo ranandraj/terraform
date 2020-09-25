@@ -48,4 +48,4 @@
       name: "{{ item }}"
       state: latest
       update_cache: yes
-    loop: ['ansible' ,'docker', 'terraform' , 'apt-transport-https', 'ca-certificates', 'curl' , 'python3-pip', 'python3-setuptools', 'virtualenv']
+    loop: ['ansible' ,'docker-ce', 'docker-ce-cli','containerd.io','terraform' , 'apt-transport-https', 'ca-certificates', 'curl' , 'python3-pip', 'python3-setuptools', 'virtualenv']
