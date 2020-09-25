@@ -1,0 +1,51 @@
+---
+- hosts: all
+  become: true
+  
+  tasks:
+  - name : Add repository for ansible
+    apt_repository:
+      repo: ppa:ansible/ansible
+      state: present
+
+  - name : Add gpg key for docker
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+      
+  - name : Add gpg key for terraform
+    apt_key:
+      url : https://apt.releases.hashicorp.com/gpg
+      state: present
+  
+  - name : Add repository for docker
+    apt_repository:
+      repo: deb https://download.docker.com/linux/ubuntu bionic stable
+      state: present
+
+  - name : Get LSB release version
+    command: lsb_release -cs
+    register: lsb
+  
+  - name : Print Lsb release value
+    debug: 
+      var: lsb
+    
+  - name : Add repository for terraform
+    apt_repository:
+      repo: deb [arch=amd64] https://apt.releases.hashicorp.com/ {{ lsb.stdout }} main
+      state: present
+
+  - name : Install aptitude
+    apt:
+      name: aptitude
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
+
+  - name : Install ansible docker terraform support tools
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+    loop: ['ansible' ,'docker', 'terraform' , 'apt-transport-https', 'ca-certificates', 'curl' , 'python3-pip', 'python3-setuptools', 'virtualenv']

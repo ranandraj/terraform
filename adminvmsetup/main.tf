@@ -91,3 +91,13 @@ resource "local_file" "inventory" {
 	filename = "inv"
 	
 }
+
+
+resource "null_resource" "ansible-docker" {
+
+  depends_on = [azurerm_linux_virtual_machine.terradvm1, local_file.inventory]
+
+  provisioner "local-exec" {
+    command = "sleep 120; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u 'azureuser' -i inv vm_tools_setup.yml"
+  }
+}
